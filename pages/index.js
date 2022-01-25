@@ -1,34 +1,8 @@
+import React, { useState } from 'react'
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config'
-
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      list-style: none;
-    }
-    body {
-      font-family: 'Open Sans', sans-serif;
-    }
-    /* App fit Height */ 
-    html, body, #__next {
-      min-height: 100vh;
-      display: flex;
-      flex: 1;
-    }
-    #__next {
-      flex: 1;
-    }
-    #__next > * {
-      flex: 1;
-    }
-    /* ./App fit Height */ 
-    `}</style>
-  );
-}
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 function Title(props) {
   const Tag = props.tag || 'h1';
@@ -60,16 +34,21 @@ function Title(props) {
 export default HomePage */
 
 export default function PaginaInicial() {
-  const username = 'peas';
+  const [username, setUsername] = useState('EdsonLucasbd');
+  const [isDisabled, setIsDisabled] = useState(false);
+  const router = useRouter()
 
   return (
     <>
-      <GlobalStyle />
+      <Head>
+      <link rel="shortcut icon" href="/chat.ico" />
+        <title>GeekCord | Login</title>
+      </Head>
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           backgroundColor: appConfig.theme.colors.primary[500],
-          backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
+          backgroundImage: 'url(/geekCord-background-2.jpg)',
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
         }}
       >
@@ -86,11 +65,17 @@ export default function PaginaInicial() {
             borderRadius: '5px', padding: '32px', margin: '16px',
             boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
             backgroundColor: appConfig.theme.colors.neutrals[700],
+            opacity: 0.9,
           }}
         >
           {/* Formulário */}
           <Box
             as="form"
+            onSubmit={function hanleSubmit(event) {
+              console.log('entrando...')
+              event.preventDefault()
+              router.push('/chat');
+            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -111,6 +96,14 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
+              value={username}
+              onChange={function handleChange(event) {
+                const value = event.target.value
+                setUsername(value)
+                value.length < 2
+                  ? setIsDisabled(true)
+                  : setIsDisabled(false)
+              }}
             />
             <Button
               type='submit'
@@ -122,6 +115,7 @@ export default function PaginaInicial() {
                 mainColorLight: appConfig.theme.colors.primary[400],
                 mainColorStrong: appConfig.theme.colors.primary[600],
               }}
+              disabled={isDisabled}
             />
           </Box>
           {/* Formulário */}
@@ -143,24 +137,37 @@ export default function PaginaInicial() {
               minHeight: '240px',
             }}
           >
+            {isDisabled !== true ?
+              <>
+                <Image
+                  styleSheet={{
+                    borderRadius: '50%',
+                    marginBottom: '16px',
+                  }}
+                  src={`https://github.com/${username}.png`}
+                />
+                <Text
+                  variant="body4"
+                  styleSheet={{
+                    color: appConfig.theme.colors.neutrals[200],
+                    backgroundColor: appConfig.theme.colors.neutrals[900],
+                    padding: '3px 10px',
+                    borderRadius: '1000px'
+                  }}
+                >
+                  {username}
+                </Text>
+              </>
+            : <>
             <Image
               styleSheet={{
                 borderRadius: '50%',
                 marginBottom: '16px',
               }}
-              src={`https://github.com/${username}.png`}
+              src={'/noUser.png'}
             />
-            <Text
-              variant="body4"
-              styleSheet={{
-                color: appConfig.theme.colors.neutrals[200],
-                backgroundColor: appConfig.theme.colors.neutrals[900],
-                padding: '3px 10px',
-                borderRadius: '1000px'
-              }}
-            >
-              {username}
-            </Text>
+          </>  
+          }
           </Box>
           {/* Photo Area */}
         </Box>
