@@ -21,18 +21,6 @@ function Title(props) {
   );
 }
 
-/* function HomePage() {
-  return (
-    <div>
-      <GlobalStyle />
-      <Title tag='h1'>Bem vindo de volta!</Title>
-      <h2>Discord - Dev Matrix</h2>
-    </div>
-  );
-}
-
-export default HomePage */
-
 export default function PaginaInicial() {
   const [username, setUsername] = useState('EdsonLucasbd');
   const [isDisabled, setIsDisabled] = useState(false);
@@ -41,7 +29,7 @@ export default function PaginaInicial() {
   return (
     <>
       <Head>
-      <link rel="shortcut icon" href="/chat.ico" />
+        <link rel="shortcut icon" href="/chat.ico" />
         <title>GeekCord | Login</title>
       </Head>
       <Box
@@ -71,7 +59,7 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
-            onSubmit={function hanleSubmit(event) {
+            onSubmit={(event) => {
               console.log('entrando...')
               event.preventDefault()
               router.push('/chat');
@@ -97,10 +85,10 @@ export default function PaginaInicial() {
                 },
               }}
               value={username}
-              onChange={function handleChange(event) {
+              onChange={(event) => {
                 const value = event.target.value
                 setUsername(value)
-                value.length < 2
+                value.length <= 2
                   ? setIsDisabled(true)
                   : setIsDisabled(false)
               }}
@@ -158,16 +146,16 @@ export default function PaginaInicial() {
                   {username}
                 </Text>
               </>
-            : <>
-            <Image
-              styleSheet={{
-                borderRadius: '50%',
-                marginBottom: '16px',
-              }}
-              src={'/noUser.png'}
-            />
-          </>  
-          }
+              : <>
+                <Image
+                  styleSheet={{
+                    borderRadius: '50%',
+                    marginBottom: '16px',
+                  }}
+                  src={'/noUser.png'}
+                />
+              </>
+            }
           </Box>
           {/* Photo Area */}
         </Box>
