@@ -1,20 +1,41 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
 import appConfig from '../config.json';
 
-import Head from 'next/head';
+import { insertMessage, getMessagesData, listenRealTimeMessage } from '../src/utils/supabaseAPI';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
 export default function ChatPage() {
+  const router = useRouter()
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const logedUser = router.query.username;
+    getMessagesData(setMessageList);
+    setUserName(logedUser);
+    listenRealTimeMessage((newMessage) => {
+      setMessageList((currentMessageListValue) => {
+        return [
+          newMessage,
+          ...currentMessageListValue,
+        ]
+      })
+    });
+  }, []);
 
   function sendNewMessage(newMessage) {
     const thisMessage = {
-      id: messageList.length,
-      from: 'EdsonLucasbd',
+      from: userName,
       text: newMessage
     }
-    setMessageList([thisMessage, ...messageList]);
+
+    insertMessage(thisMessage, messageList)
+
     setMessage('')
   }
 
@@ -26,42 +47,42 @@ export default function ChatPage() {
       </Head>
       <Box
         styleSheet={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
           backgroundColor: appConfig.theme.colors.primary[500],
           backgroundImage: 'url(/geekCord-background-2.jpg)',
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
       >
         <Box
           styleSheet={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-            borderRadius: '5px',
             backgroundColor: appConfig.theme.colors.neutrals[700],
+            borderRadius: '5px',
+            boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+            display: 'flex',
+            flex: 1,
+            flexDirection: 'column',
             height: '100%',
-            maxWidth: '95%',
             maxHeight: '95vh',
-            padding: '32px',
+            maxWidth: '95%',
             opacity: 0.9,
+            padding: '32px',
           }}
         >
-          <Header />
+          <Header user={userName}/>
           <Box
             styleSheet={{
-              position: 'relative',
+              backgroundColor: appConfig.theme.colors.neutrals[600],
+              borderRadius: '5px',
               display: 'flex',
               flex: 1,
-              height: '80%',
-              backgroundColor: appConfig.theme.colors.neutrals[600],
               flexDirection: 'column',
-              borderRadius: '5px',
+              height: '80%',
               padding: '16px',
+              position: 'relative',
             }}
           >
 
-            <MessageList messages={messageList} />
+            <MessageList messages={messageList} changeList={setMessageList}/>
             <Box
               as="form"
               styleSheet={{
@@ -69,6 +90,9 @@ export default function ChatPage() {
                 alignItems: 'center',
               }}
             >
+              <ButtonSendSticker onStickerClick={(sticker) => {
+                sendNewMessage(`:sticker:${sticker}`)
+              }} />
               <TextField
                 value={message}
                 onChange={(event) => {
@@ -84,15 +108,15 @@ export default function ChatPage() {
                 placeholder="Insira sua mensagem aqui..."
                 type="textarea"
                 styleSheet={{
-                  width: '100%',
-                  border: '0',
-                  resize: 'none',
-                  borderRadius: '5px',
-                  padding: '6px 8px',
                   backgroundColor: appConfig.theme.colors.neutrals[800],
-                  marginRight: '12px',
+                  border: '0',
+                  borderRadius: '5px',
                   color: appConfig.theme.colors.neutrals[200],
+                  marginRight: '12px',
                   overflow: 'hidden',
+                  padding: '6px 8px',
+                  resize: 'none',
+                  width: '100%',
                 }}
               />
               <Button
@@ -100,12 +124,13 @@ export default function ChatPage() {
                 label="Enviar"
                 size='xs'
                 disabled={message.length === 0}
-                onClick={() => sendNewMessage(message)}
+                onClick={() => sendNewMessage(message, message.from)}
                 styleSheet={{
                   backgroundColor: appConfig.theme.colors.primary[700],
-                  hover: { backgroundColor: appConfig.theme.colors.primary[800] },
                   focus: { backgroundColor: appConfig.theme.colors.primary[800] },
+                  fontSize: '20px',
                   height: '43px',
+                  hover: { backgroundColor: appConfig.theme.colors.primary[800] },
                   marginBottom: '8px',
                 }}
               />
@@ -117,11 +142,11 @@ export default function ChatPage() {
   )
 }
 
-function Header() {
+function Header({ user }) {
   const [userData, setUserData] = useState({});
-
-  function getUserData(userName) {
-    fetch(`https://api.github.com/users/${userName}`)
+  
+  function getUserData() {
+    fetch(`https://api.github.com/users/${user}`)
       .then((response) => {
         return response.json();
       })
@@ -136,22 +161,39 @@ function Header() {
       <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
         <Image
           styleSheet={{
-            borderRadius: '50%',
             // marginBottom: '16px',
-            width: '40px',
-            height: '40px',
+            borderRadius: '50%',
             cursor: 'pointer',
+            height: '40px',
+            width: '40px',
           }}
-          src={`https://github.com/EdsonLucasbd.png`}
-          onClick={() => { getUserData('EdsonLucasbd') }}
+          src={`https://github.com/${user}.png`}
+          onClick={() => { getUserData() }}
         />
-        <Text variant='heading5'>
+        <Text 
+          variant='heading5'
+          styleSheet={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
           Chat
+          <Image 
+            src="/chat.ico" 
+            alt="chat icon" 
+            styleSheet={{
+              height: '22px',
+              marginLeft: '7px',
+              width: '22px',
+            }}
+          />
         </Text>
         <Button
           variant='tertiary'
           colorVariant='neutral'
           label='Logout'
+          iconName='FaSignOutAlt'
           href="/"
         />
       </Box>
@@ -160,31 +202,37 @@ function Header() {
 }
 
 function MessageList(props) {
+  function deleteMessage(messageId) {
+    const newArray = props.messages.filter((item) => item.id !== messageId);
+    console.log('lista original', props.messages)
+    console.log('lista nova', newArray)
+    props.changeList(newArray);
+  }
+
   return (
     <Box
       tag="ul"
       styleSheet={{
-        overflow: 'scroll',
-        display: 'flex',
-        flexDirection: 'column-reverse',
-        flex: 1,
         color: appConfig.theme.colors.neutrals["000"],
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column-reverse',
         marginBottom: '16px',
+        overflow: 'scroll',
       }}
     >
       {props.messages.map((message) => {
         return (
-
           <Text
             key={message.id}
             tag="li"
             styleSheet={{
               borderRadius: '5px',
-              padding: '6px',
               marginBottom: '12px',
               hover: {
                 backgroundColor: appConfig.theme.colors.neutrals[700],
-              }
+              },
+              padding: '6px',
             }}
           >
             <Box
@@ -194,28 +242,33 @@ function MessageList(props) {
             >
               <Image
                 styleSheet={{
-                  width: '20px',
-                  height: '20px',
                   borderRadius: '50%',
                   display: 'inline-block',
+                  height: '20px',
                   marginRight: '8px',
+                  width: '20px',
                 }}
-                src={`https://github.com/EdsonLucasbd.png`}
+                src={`https://github.com/${message.from}.png`}
               />
               <Text tag="strong">
                 {message.from}
               </Text>
               <Text
                 styleSheet={{
+                  color: appConfig.theme.colors.neutrals[300],
                   fontSize: '10px',
                   marginLeft: '8px',
-                  color: appConfig.theme.colors.neutrals[300],
                 }}
                 tag="span"
               >
                 {(new Date().toLocaleDateString())}
               </Text>
-              <Text tag="span" styleSheet={{ 
+              <Text 
+              tag="span" 
+              onClick={() => {
+                deleteMessage(message.id)
+              }}
+              styleSheet={{ 
                 cursor: 'pointer' ,
                 marginLeft: '85%',
                 opacity: 0.5,
@@ -227,7 +280,13 @@ function MessageList(props) {
                 Ⓧ
               </Text>
             </Box>
-            {message.text}
+              { message.text.startsWith(':sticker:') 
+                ? (
+                  <Image src={message.text.replace(':sticker:', '')}/>
+                ) : (
+                  message.text
+                ) }
+
           </Text>
         );
       })}
