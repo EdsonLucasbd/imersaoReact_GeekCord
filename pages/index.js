@@ -22,8 +22,8 @@ function Title(props) {
 }
 
 export default function PaginaInicial() {
-  const [username, setUsername] = useState('EdsonLucasbd');
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [username, setUsername] = useState('');
+  const [isDisabled, setIsDisabled] = useState(true);
   const router = useRouter()
 
   return (
@@ -85,6 +85,7 @@ export default function PaginaInicial() {
                 },
               }}
               value={username}
+              label='Digite seu nome de usuário Github'
               onChange={(event) => {
                 const value = event.target.value
                 setUsername(value)

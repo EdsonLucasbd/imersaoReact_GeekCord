@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import appConfig from '../config.json';
 
-import { insertMessage, getMessagesData, listenRealTimeMessage } from '../src/utils/supabaseAPI';
+import { insertMessage, getMessagesData, listenRealTimeMessage, deleteMessage } from '../src/utils/supabaseAPI';
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
 export default function ChatPage() {
@@ -202,12 +202,12 @@ function Header({ user }) {
 }
 
 function MessageList(props) {
-  function deleteMessage(messageId) {
+  /* function deleteMessage(messageId) {
     const newArray = props.messages.filter((item) => item.id !== messageId);
     console.log('lista original', props.messages)
     console.log('lista nova', newArray)
     props.changeList(newArray);
-  }
+  } */
 
   return (
     <Box
@@ -222,12 +222,19 @@ function MessageList(props) {
       }}
     >
       {props.messages.map((message) => {
+        console.log('id: ', message.id)
         return (
           <Text
             key={message.id}
             tag="li"
+            onClick={() => {
+              // deleteMessage(message.id)
+              // precisa fazer a lista atualizar e pedir a confirmação pra deletar
+              alert('Funcionalidade não finalizada')
+            }}
             styleSheet={{
               borderRadius: '5px',
+              cursor: 'pointer',
               marginBottom: '12px',
               hover: {
                 backgroundColor: appConfig.theme.colors.neutrals[700],
@@ -266,7 +273,8 @@ function MessageList(props) {
               <Text 
               tag="span" 
               onClick={() => {
-                deleteMessage(message.id)
+                // deleteMessage(message.id)
+                alert('Funcionalidade não finalizada')
               }}
               styleSheet={{ 
                 cursor: 'pointer' ,
@@ -282,11 +290,17 @@ function MessageList(props) {
             </Box>
               { message.text.startsWith(':sticker:') 
                 ? (
-                  <Image src={message.text.replace(':sticker:', '')}/>
+                  <Image 
+                    src={message.text.replace(':sticker:', '')}
+                    alt='sticker'
+                    styleSheet={{
+                      maxWidth: '250px',
+                      maxHeight: '250px'
+                    }}
+                  />
                 ) : (
                   message.text
                 ) }
-
           </Text>
         );
       })}
