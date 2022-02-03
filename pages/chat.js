@@ -7,15 +7,31 @@ import appConfig from '../config.json';
 
 import { insertMessage, getMessagesData, listenRealTimeMessage, deleteMessage } from '../src/utils/supabaseAPI';
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
+import Loader from '../src/components/Loader';
+import UserInfoModal from '../src/components/UserInfoModal';
 
 export default function ChatPage() {
-  const router = useRouter()
+  const router = useRouter();
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [userName, setUserName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [wallpaper, setWallpaper] = useState('');
 
+  
   useEffect(() => {
     const logedUser = router.query.username;
+    const randomWallpaper = Math.floor(Math.random() * 3);
+
+    switch (randomWallpaper) {
+      case 0: setWallpaper('url(/rick-and-morty-portal.jpg)')
+        break;
+      case 1: setWallpaper('url(/rick_and_morty_2.png)')
+        break;
+      case 2: setWallpaper('url(/geekCord-background.jpg)')
+        break
+    }
+
     getMessagesData(setMessageList);
     setUserName(logedUser);
     listenRealTimeMessage((newMessage) => {
@@ -26,6 +42,7 @@ export default function ChatPage() {
         ]
       })
     });
+    setIsLoading(false)
   }, []);
 
   function sendNewMessage(newMessage) {
@@ -48,7 +65,7 @@ export default function ChatPage() {
       <Box
         styleSheet={{
           backgroundColor: appConfig.theme.colors.primary[500],
-          backgroundImage: 'url(/geekCord-background-2.jpg)',
+          backgroundImage: `${wallpaper}`,
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
@@ -81,8 +98,13 @@ export default function ChatPage() {
               position: 'relative',
             }}
           >
-
-            <MessageList messages={messageList} changeList={setMessageList}/>
+            {isLoading 
+            ? (
+              <Loader/>
+            ) 
+            : (
+              <MessageList messages={messageList} changeList={setMessageList}/>
+            )}
             <Box
               as="form"
               styleSheet={{
@@ -143,39 +165,25 @@ export default function ChatPage() {
 }
 
 function Header({ user }) {
-  const [userData, setUserData] = useState({});
-  
-  function getUserData() {
-    fetch(`https://api.github.com/users/${user}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((convertedResponse) => {
-        setUserData(convertedResponse)
-        console.log(convertedResponse)
-      })
-  }
-
   return (
     <>
-      <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
-        <Image
-          styleSheet={{
-            // marginBottom: '16px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            height: '40px',
-            width: '40px',
-          }}
-          src={`https://github.com/${user}.png`}
-          onClick={() => { getUserData() }}
-        />
+      <Box 
+        styleSheet={{ 
+          width: '100%', 
+          marginBottom: '16px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between' 
+        }}
+      >
+        <UserInfoModal/>
         <Text 
           variant='heading5'
           styleSheet={{
             alignItems: 'center',
             display: 'flex',
             flexDirection: 'row',
+            color: appConfig.theme.colors.primary['050'],
           }}
         >
           Chat
@@ -202,12 +210,7 @@ function Header({ user }) {
 }
 
 function MessageList(props) {
-  /* function deleteMessage(messageId) {
-    const newArray = props.messages.filter((item) => item.id !== messageId);
-    console.log('lista original', props.messages)
-    console.log('lista nova', newArray)
-    props.changeList(newArray);
-  } */
+  // const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Box
@@ -218,7 +221,7 @@ function MessageList(props) {
         flex: 1,
         flexDirection: 'column-reverse',
         marginBottom: '16px',
-        overflow: 'scroll',
+        overflow: 'hidden',
       }}
     >
       {props.messages.map((message) => {
@@ -227,14 +230,8 @@ function MessageList(props) {
           <Text
             key={message.id}
             tag="li"
-            onClick={() => {
-              // deleteMessage(message.id)
-              // precisa fazer a lista atualizar e pedir a confirmação pra deletar
-              alert('Funcionalidade não finalizada')
-            }}
             styleSheet={{
               borderRadius: '5px',
-              cursor: 'pointer',
               marginBottom: '12px',
               hover: {
                 backgroundColor: appConfig.theme.colors.neutrals[700],
@@ -254,9 +251,17 @@ function MessageList(props) {
                   height: '20px',
                   marginRight: '8px',
                   width: '20px',
+                  // cursor: 'pointer',
+                  transition: 'all .2s ease-in-out',
+                  hover: {
+                    width: '40px',
+                    height: '40px',
+                  }
                 }}
                 src={`https://github.com/${message.from}.png`}
+                // onClick={() => setIsOpen(!isOpen)}
               />
+              {/* {isOpen && <UserInfoModal specificUser={message.from}/>} */}
               <Text tag="strong">
                 {message.from}
               </Text>
@@ -269,23 +274,23 @@ function MessageList(props) {
                 tag="span"
               >
                 {(new Date().toLocaleDateString())}
-              </Text>
-              <Text 
-              tag="span" 
-              onClick={() => {
-                // deleteMessage(message.id)
-                alert('Funcionalidade não finalizada')
-              }}
-              styleSheet={{ 
-                cursor: 'pointer' ,
-                marginLeft: '85%',
-                opacity: 0.5,
-                transition: '0.2s',
-                hover: {
-                  opacity: 1,
-                }
-              }}>
-                Ⓧ
+                <Text 
+                tag="span" 
+                onClick={() => {
+                  deleteMessage(message.id, props.changeList)
+                }}
+                styleSheet={{ 
+                  position: 'absolute',
+                  cursor: 'pointer' ,
+                  right: '25px',
+                  opacity: 0.5,
+                  transition: '0.2s',
+                  hover: {
+                    opacity: 1,
+                  }
+                }}>
+                  Ⓧ
+                </Text>
               </Text>
             </Box>
               { message.text.startsWith(':sticker:') 

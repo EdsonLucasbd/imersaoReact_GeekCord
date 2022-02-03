@@ -30,13 +30,13 @@ export const listenRealTimeMessage = (insertNewMessage) => {
   .subscribe();
 };
 
-export const deleteMessage = async (messageId) => {
-  console.log('clicou para deletar a mensagem de id: ', messageId)
+export const deleteMessage = async (messageId, setList) => {
+  // console.log('clicou para deletar a mensagem de id: ', messageId)
   await supabaseClient
   .from('messageList')
   .delete()
   .match({id: messageId})
-  /* .then(({ data }) => {
-    console.log(data)
-  }) */
+  .then(() => {
+    getMessagesData(setList)
+  })
 }

@@ -3,6 +3,7 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config'
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Loader from '../src/components/Loader';
 
 function Title(props) {
   const Tag = props.tag || 'h1';
@@ -24,6 +25,7 @@ function Title(props) {
 export default function PaginaInicial() {
   const [username, setUsername] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter()
 
   return (
@@ -60,13 +62,22 @@ export default function PaginaInicial() {
           <Box
             as="form"
             onSubmit={(event) => {
-              console.log('entrando...')
+              setIsLoading(true)
               event.preventDefault()
-              router.push(`/chat?username=${username}`);
+              router.push(`/chat?username=${username}`)
+              .then(() => setIsLoading(false));
             }}
             styleSheet={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: { 
+                xs: '100%', 
+                sm: '50%' 
+              }, 
+              textAlign: 'center', 
+              marginBottom: '32px',
             }}
           >
             <Title tag="h2">Boas vindas de volta!</Title>
@@ -106,6 +117,7 @@ export default function PaginaInicial() {
               }}
               disabled={isDisabled}
             />
+            {isLoading && <Loader />}
           </Box>
           {/* Formulário */}
 
