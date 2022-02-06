@@ -1,12 +1,10 @@
 <div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="ImersaoReact" />
+  <img src="https://github.com/EdsonLucasbd/imersaoReact_GeekCord/blob/main/public/github/GeekCordLogo.png?raw=true" alt="ImersaoReact" />
 
   &#xa0;
 
   <!-- <a href="https://imersaoreact.netlify.com">Demo</a> -->
 </div>
-
-<h1 align="center">ImersaoReact</h1>
 
 <p align="center">
   <img alt="Principal linguagem do projeto" src="https://img.shields.io/github/languages/top/EdsonLucasbd/imersaoreact?color=56BEB8">
