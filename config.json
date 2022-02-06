@@ -27,24 +27,13 @@
         "800": "#272932",
         "900": "#1B1C22",
         "999": "#09090B"
-      },
-      "red": {
-        "000": "#FFFFFF",
-        "050": "#FADCDE",
-        "100": "#F4B8BC",
-        "200": "#F2A6AB",
-        "300": "#EC838A",
-        "400": "#EA7179",
-        "500": "#E75F68",
-        "600": "#E44E58",
-        "700": "#DF2935",
-        "800": "#C31D28",
-        "900": "#A01821",
-        "999": "#7C131A"
       }
     }
   },
   "stickers": [
+    "https://avatarfiles.alphacoders.com/895/89556.gif",
+    "http://www.fightersgeneration.com/nf8/char6/scorpion-mortalkombat-fan-remake-punch.GIF",
+    "https://i.pinimg.com/originals/97/5d/0d/975d0defd7d7be5c869a3e7e8759ed48.gif",
     "https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_1.png",
     "https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_2.png",
     "https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_3.png",

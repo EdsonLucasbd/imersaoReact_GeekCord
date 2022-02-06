@@ -103,7 +103,7 @@ export default function ChatPage() {
               <Loader/>
             ) 
             : (
-              <MessageList messages={messageList} changeList={setMessageList}/>
+              <MessageList messages={messageList} changeList={setMessageList} currentUser={userName}/>
             )}
             <Box
               as="form"
@@ -164,7 +164,7 @@ export default function ChatPage() {
   )
 }
 
-function Header({ user }) {
+function Header() {
   return (
     <>
       <Box 
@@ -210,22 +210,22 @@ function Header({ user }) {
 }
 
 function MessageList(props) {
-  // const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Box
       tag="ul"
+      className='customDiv'
       styleSheet={{
         color: appConfig.theme.colors.neutrals["000"],
         display: 'flex',
         flex: 1,
         flexDirection: 'column-reverse',
         marginBottom: '16px',
-        overflow: 'hidden',
+        overflowY: 'scroll',
       }}
     >
       {props.messages.map((message) => {
-        console.log('id: ', message.id)
         return (
           <Text
             key={message.id}
@@ -248,21 +248,24 @@ function MessageList(props) {
                 styleSheet={{
                   borderRadius: '50%',
                   display: 'inline-block',
-                  height: '20px',
+                  height: '25px',
                   marginRight: '8px',
-                  width: '20px',
-                  // cursor: 'pointer',
-                  transition: 'all .2s ease-in-out',
-                  hover: {
-                    width: '40px',
-                    height: '40px',
-                  }
+                  width: '25px',
                 }}
                 src={`https://github.com/${message.from}.png`}
-                // onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setIsOpen(!isOpen)}
               />
-              {/* {isOpen && <UserInfoModal specificUser={message.from}/>} */}
-              <Text tag="strong">
+              <Text 
+                tag="a" 
+                href={`https://github.com/${message.from}`}
+                target="_blank"
+                styleSheet={{
+                  color: appConfig.theme.colors.neutrals["000"],
+                  hover: {
+                    textDecoration: `underline wavy ${appConfig.theme.colors.primary["100"]}`,
+                  }
+                }}
+              >
                 {message.from}
               </Text>
               <Text
@@ -274,23 +277,25 @@ function MessageList(props) {
                 tag="span"
               >
                 {(new Date().toLocaleDateString())}
-                <Text 
-                tag="span" 
-                onClick={() => {
-                  deleteMessage(message.id, props.changeList)
-                }}
-                styleSheet={{ 
-                  position: 'absolute',
-                  cursor: 'pointer' ,
-                  right: '25px',
-                  opacity: 0.5,
-                  transition: '0.2s',
-                  hover: {
-                    opacity: 1,
-                  }
-                }}>
-                  Ⓧ
-                </Text>
+                {props.currentUser === message.from 
+                  && <Text 
+                  tag="span" 
+                  onClick={() => {
+                    deleteMessage(message.id, props.changeList)
+                  }}
+                  styleSheet={{ 
+                    position: 'relative',
+                    cursor: 'pointer' ,
+                    left: '85%',
+                    opacity: 0.5,
+                    transition: '0.2s',
+                    hover: {
+                      opacity: 1,
+                    }
+                  }}>
+                    Ⓧ
+                  </Text>
+                }
               </Text>
             </Box>
               { message.text.startsWith(':sticker:') 

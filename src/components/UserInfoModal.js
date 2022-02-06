@@ -3,55 +3,11 @@ import { Box, Text, Image } from '@skynexui/components';
 import appConfig from '../../config.json';
 import { useRouter } from 'next/router';
 
-const InfoBoxItems = ({ children }) => {
-  return (
-    <Box
-      styleSheet={{
-        display: 'flex',
-        flex: 1,
-        flexWrap: 'wrap',
-        alignItems: 'flex-start',
-      }}
-    >
-      {children}
-    </Box>
-  )
-}
-
-const InfoTitle = ({ children }) => {
-  return (
-    <Text 
-      variant='heading5'
-      styleSheet={{
-        color: appConfig.theme.colors.primary['200'],
-        marginRight: '15px,'
-      }}
-    >
-      {children}
-    </Text>
-  )
-}
-
-const InfoData = ({ children }) => {
-  return (
-    <Text 
-      variant='body3'
-      styleSheet={{
-      color: appConfig.theme.colors.primary['050'],
-      marginLeft: '18px',
-    }}
-    >
-      {children}
-    </Text>
-  )
-}
-
-
 export default function UserInfoModal({ specificUser }) {
   const router = useRouter();
   const [isOpen, setOpenState] = useState('');
   const [userData, setUserData] = useState({});
-  const [userRepoStars, setUserRepoStars] = useState({});
+  const [userRepoData, setUserRepoData] = useState({});
   const [userName, setUserName] = useState('')
 
   useEffect(() => {
@@ -86,7 +42,7 @@ export default function UserInfoModal({ specificUser }) {
         const ord = greater.sort((a, b) => {
           return b.stargazers - a.stargazers
         })
-        setUserRepoStars(ord[0])
+        setUserRepoData(ord[0])
       })
   }
 
@@ -130,131 +86,186 @@ export default function UserInfoModal({ specificUser }) {
         />
       </Box>
       {isOpen && (
-        <Box
-          styleSheet={{
-            backgroundColor: appConfig.theme.colors.neutrals[800],
-            borderRadius: '5px',
-            top: '30px',
-            boxShadow: 'rgba(4, 4, 5, 0.15) 0px 0px 0px 1px, rgba(0, 0, 0, 0.24) 0px 8px 16px 0px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '350px',
-            padding: '16px',
-            position: 'absolute',
-            left: '30px',
-            zIndex: '100',
-            width: {
-              xs: '300px',
-              sm: '390px',
-            },
-          }}
-        >
-          <Box
-            styleSheet={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-            }}
-          >
-            <Text
-              styleSheet={{
-                color: appConfig.theme.colors.neutrals["000"],
-                fontWeight: 'bold',
-            }}>
-              Perfil
-            </Text>
-            <Text 
-              tag='span'
-              styleSheet={{ 
-                position: 'absolute',
-                color: appConfig.theme.colors.neutrals["000"],
-                right: '10px',
-                opacity: 0.5,
-                transition: '0.2s',
-                cursor: 'pointer',
-                hover: {
-                    fontWeight: 'bold',
-                    opacity: 1,
-                  }
-              }}
-              onClick={() => setOpenState(!isOpen)}
-            >
-              Ⓧ
-            </Text>
-          </Box>
-          <Box
-            styleSheet={{
-              display: 'flex',
-              flex: 1,
-              flexDirection: 'column',
-              overflow: 'hidden',
-              paddingTop: '16px',
-            }}
-          >
-            <Image
-              styleSheet={{
-                marginLeft: '20%',
-                marginBottom: '5px',
-                borderRadius: '50%',
-                height: '150px',
-                width: '150px',
-              }}
-              src={`https://github.com/${userName}.png`}
-            />
-            <InfoBoxItems>
-              <InfoTitle>
-                Nome:
-              </InfoTitle>
-              <InfoData>
-                {userData.name}
-              </InfoData>
-            </InfoBoxItems>
-            <InfoBoxItems>
-              <InfoTitle>
-                Seguidores:
-              </InfoTitle>
-              <InfoData>
-                {userData.followers}
-              </InfoData>
-            </InfoBoxItems>
-            <InfoBoxItems>
-              <InfoTitle>
-                Seguindo:
-              </InfoTitle>
-              <InfoData>
-                {userData.following}
-              </InfoData>
-            </InfoBoxItems>
-            <InfoBoxItems>
-              <InfoTitle>
-                Localidade:
-              </InfoTitle>
-              <InfoData>
-                {userData.location}
-              </InfoData>
-            </InfoBoxItems>
-            <InfoBoxItems>
-              <InfoTitle>
-                Repo mais popular:
-              </InfoTitle>
-              <InfoData>
-                {userRepoStars.repo}
-              </InfoData>
-            </InfoBoxItems>
-            <InfoBoxItems>
-              <InfoTitle>
-                Estrelas:
-              </InfoTitle>
-              <InfoData>
-                {userRepoStars.stargazers}
-              </InfoData>
-            </InfoBoxItems>
-          </Box>
-        </Box>
+        <Modal
+          changeOpenState={setOpenState}
+          openState={isOpen}
+          name={userName}
+          repoData={userRepoData}
+          userData={userData}
+        />
       )}
     </Box>
   )
+}
+
+const InfoBoxItems = ({ children }) => {
+  return (
+    <Box
+      styleSheet={{
+        display: 'flex',
+        flex: 1,
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+      }}
+    >
+      {children}
+    </Box>
+  )
+}
+
+const InfoTitle = ({ children }) => {
+  return (
+    <Text
+      variant='heading5'
+      styleSheet={{
+        color: appConfig.theme.colors.primary['200'],
+        marginRight: '15px,'
+      }}
+    >
+      {children}
+    </Text>
+  )
+}
+
+const InfoData = ({ children }) => {
+  return (
+    <Text
+      variant='body3'
+      styleSheet={{
+        color: appConfig.theme.colors.primary['050'],
+        marginLeft: '18px',
+      }}
+    >
+      {children}
+    </Text>
+  )
+}
+
+const Modal = ({ changeOpenState, openState, name, userData, repoData }) => {
+  return (
+    <Box
+      styleSheet={{
+        backgroundColor: appConfig.theme.colors.neutrals[800],
+        borderRadius: '5px',
+        top: '30px',
+        boxShadow: 'rgba(4, 4, 5, 0.15) 0px 0px 0px 1px, rgba(0, 0, 0, 0.24) 0px 8px 16px 0px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '350px',
+        padding: '16px',
+        position: 'absolute',
+        left: '30px',
+        zIndex: '100',
+        width: {
+          xs: '300px',
+          sm: '390px',
+        },
+      }}
+    >
+      <Box
+        styleSheet={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+        }}
+      >
+        <Text
+          styleSheet={{
+            color: appConfig.theme.colors.neutrals["000"],
+            fontWeight: 'bold',
+          }}>
+          Perfil
+        </Text>
+        <Text
+          tag='span'
+          styleSheet={{
+            position: 'absolute',
+            color: appConfig.theme.colors.neutrals["000"],
+            right: '10px',
+            opacity: 0.5,
+            transition: '0.2s',
+            cursor: 'pointer',
+            hover: {
+              fontWeight: 'bold',
+              opacity: 1,
+            }
+          }}
+          onClick={() => changeOpenState(!openState)}
+        >
+          Ⓧ
+        </Text>
+      </Box>
+      <Box
+        styleSheet={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          overflowY: 'scroll',
+          paddingTop: '16px',
+        }}
+      >
+        <Image
+          styleSheet={{
+            marginLeft: '20%',
+            marginBottom: '5px',
+            borderRadius: '50%',
+            height: '150px',
+            width: '150px',
+          }}
+          src={`https://github.com/${name}.png`}
+        />
+        <InfoBoxItems>
+          <InfoTitle>
+            Nome:
+          </InfoTitle>
+          <InfoData>
+            {userData.name}
+          </InfoData>
+        </InfoBoxItems>
+        <InfoBoxItems>
+          <InfoTitle>
+            Seguidores:
+          </InfoTitle>
+          <InfoData>
+            {userData.followers}
+          </InfoData>
+        </InfoBoxItems>
+        <InfoBoxItems>
+          <InfoTitle>
+            Seguindo:
+          </InfoTitle>
+          <InfoData>
+            {userData.following}
+          </InfoData>
+        </InfoBoxItems>
+        <InfoBoxItems>
+          <InfoTitle>
+            Localidade:
+          </InfoTitle>
+          <InfoData>
+            {userData.location}
+          </InfoData>
+        </InfoBoxItems>
+        <InfoBoxItems>
+          <InfoTitle>
+            Repo mais popular:
+          </InfoTitle>
+          <InfoData>
+            {repoData.repo}
+          </InfoData>
+        </InfoBoxItems>
+        <InfoBoxItems>
+          <InfoTitle>
+            Estrelas no repo:
+          </InfoTitle>
+          <InfoData>
+            {repoData.stargazers}
+          </InfoData>
+        </InfoBoxItems>
+      </Box>
+    </Box>
+  );
 }
