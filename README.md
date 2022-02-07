@@ -7,13 +7,13 @@
 </div>
 
 <p align="center">
-  <img alt="Principal linguagem do projeto" src="https://img.shields.io/github/languages/top/EdsonLucasbd/imersaoreact?color=56BEB8">
+  <img alt="Principal linguagem do projeto" src="https://img.shields.io/github/languages/top/EdsonLucasbd/imersaoReact_GeekCord?color=472A50">
 
-  <img alt="Quantidade de linguagens utilizadas" src="https://img.shields.io/github/languages/count/EdsonLucasbd/imersaoreact?color=56BEB8">
+  <img alt="Quantidade de linguagens utilizadas" src="https://img.shields.io/github/languages/count/EdsonLucasbd/imersaoReact_GeekCord?color=472A50">
 
-  <img alt="Tamanho do repositório" src="https://img.shields.io/github/repo-size/EdsonLucasbd/imersaoreact?color=56BEB8">
+  <img alt="Tamanho do repositório" src="https://img.shields.io/github/repo-size/EdsonLucasbd/imersaoReact_GeekCord?color=472A50">
 
-  <img alt="Licença" src="https://img.shields.io/github/license/EdsonLucasbd/imersaoreact?color=56BEB8">
+  <img alt="Licença" src="https://img.shields.io/github/license/EdsonLucasbd/imersaoReact_GeekCord?color=472A50">
 
   <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/EdsonLucasbd/imersaoreact?color=56BEB8" /> -->
 
@@ -21,12 +21,6 @@
 
   <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/EdsonLucasbd/imersaoreact?color=56BEB8" /> -->
 </p>
-
-Status
-
-<h4 align="center"> 
-	🚧  ImersaoReact 🚀 Em construção...  🚧
-</h4> 
 
 <hr>
 
@@ -44,23 +38,29 @@ Status
 
 ## :dart: Sobre ##
 
-Sobre o seu projeto
+O GeekCoord é um chat online que você pode acessar utilizando seu nome de usuário github.\
+Foi desenvolvido durante a Imersão React da Alura e aprimorado com novas funcionalidades.
 
 ## :sparkles: Funcionalidades ##
 
-:heavy_check_mark: Funcionalidade 1;\
-:heavy_check_mark: Funcionalidade 2;\
-:heavy_check_mark: Funcionalidade 3;
+:heavy_check_mark: Consumo da API do github;\
+:heavy_check_mark: Troca de mensagens em tempo real;\
+### :up: Extras ###
+* :heavy_check_mark: Envio de mensagem com "Enter" ou com o botão "Enviar";
+* :heavy_check_mark: Deletar mensagens recém enviadas;
+* :heavy_check_mark: Conferir um resumo do seu perfil do github;
+* :heavy_check_mark: Acessar o perfil das pessoas do chat;
+* :heavy_check_mark: Loading no login e durante o carregamento das mensagens;
+* :heavy_check_mark: Estilização da scrollbar;
 
 ## :rocket: Tecnologias ##
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
-<!-- - [Expo](https://expo.io/) -->
-<!-- - [Node.js](https://nodejs.org/en/) -->
 - [React](https://pt-br.reactjs.org/)
-<!-- - [React Native](https://reactnative.dev/) -->
-<!-- - [TypeScript](https://www.typescriptlang.org/) -->
+- [Next js](https://nextjs.org/)
+- [SkynexUI](https://skynexui.dev/)
+- [Supabase](https://supabase.com/)
 
 ## :white_check_mark: Pré requisitos ##
 
