@@ -3,7 +3,7 @@
 
   &#xa0;
 
-  <!-- <a href="https://imersaoreact.netlify.com">Demo</a> -->
+  <a href="https://geek-cord-edsonlucasbd.vercel.app/">Demo</a>
 </div>
 
 <p align="center">
@@ -14,12 +14,6 @@
   <img alt="Tamanho do repositório" src="https://img.shields.io/github/repo-size/EdsonLucasbd/imersaoReact_GeekCord?color=472A50">
 
   <img alt="Licença" src="https://img.shields.io/github/license/EdsonLucasbd/imersaoReact_GeekCord?color=472A50">
-
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/EdsonLucasbd/imersaoreact?color=56BEB8" /> -->
-
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/EdsonLucasbd/imersaoreact?color=56BEB8" /> -->
-
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/EdsonLucasbd/imersaoreact?color=56BEB8" /> -->
 </p>
 
 <hr>
@@ -70,16 +64,18 @@ Antes de começar :checkered_flag:, você precisa ter o [Git](https://git-scm.co
 
 ```bash
 # Clone este repositório
-$ git clone https://github.com/EdsonLucasbd/imersaoreact
+$ git clone https://github.com/EdsonLucasbd/imersaoReact_GeekCord
 
 # Entre na pasta
-$ cd imersaoreact
+$ cd imersaoReact_GeekCord
+
+# Dentro dessa pasta crie um arquivo .env.local seguindo as informações do arquivo .env.example
 
 # Instale as dependências
 $ yarn
 
 # Para iniciar o projeto
-$ yarn start
+$ yarn dev
 
 # O app vai inicializar em <http://localhost:3000>
 ```
